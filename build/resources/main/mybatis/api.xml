@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ 
+ <!-- parameterType -> jsp로부터 입력받을 값 -->
+<!--  resultType -> jsp로 보여줄 값 -->
+
+<mapper namespace="dev.mvc.api.ApiDAOInter">
+    <insert id="create"  parameterType="dev.mvc.api.ApiVO">
+        INSERT INTO api(main_no, api_no, api_name, api_seqno, position, rdate)
+        VALUES( #{main_no} ,api_seq.nextval, #{api_name}, #{api_seqno}, #{position}, sysdate )
+    </insert>
+    
+    <select id="list_api" resultType="dev.mvc.api.ApiVO" parameterType="int">
+        SELECT api_no, main_no, api_name, api_seqno, position, rdate
+        FROM api
+        WHERE main_no = #{main_no }
+        ORDER BY api_no ASC
+    </select>
+    <delete id="delete" parameterType="int">
+    DELETE FROM api
+    WHERE api_no = #{api_no}
+    </delete>
+    
+    <select id="read" resultType="dev.mvc.api.ApiVO" parameterType="int">
+        SELECT api_no, main_no, api_name, api_seqno, position, rdate
+        FROM api
+        WHERE api_no = #{api_no }
+    </select>
+    
+    <update id="update" parameterType="dev.mvc.api.ApiVO">
+    UPDATE api
+    SET main_no = #{main_no }, api_name = #{api_name }, position = #{position }
+    WHERE api_no = #{api_no }
+    </update>
+</mapper>

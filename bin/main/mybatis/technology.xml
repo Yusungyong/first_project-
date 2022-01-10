@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ 
+ <!-- parameterType -> jsp로부터 입력받을 값 -->
+<!--  resultType -> jsp로 보여줄 값 -->
+
+<mapper namespace="dev.mvc.technology.TechDAOInter">   
+    <insert id="create" parameterType="dev.mvc.technology.TechVO">
+        <selectKey keyProperty="techno" resultType="int" order="BEFORE">
+            SELECT tech_seq.nextval FROM dual
+        </selectKey>
+    
+    INSERT INTO technology (techno, adminno, api_no, tech_name, contents, cnt, rdate, word, file1, file1saved, thumb1, size1, passwd)
+    VALUES(#{techno }, #{adminno },#{api_no}, #{tech_name}, #{contents}, #{cnt }, sysdate, #{word }, #{file1 }, #{file1saved }, #{thumb1 }, #{size1 }, #{passwd })
+    </insert>
+    
+    <select id="list_technology_grid" resultType= "dev.mvc.technology.TechVO" parameterType="int">
+    SELECT techno, tech_name,  contents, cnt, rdate, word, file1, file1saved, thumb1, size1, passwd
+    FROM technology
+    WHERE api_no = #{api_no}
+    </select>
+    
+    <select id="read" resultType="dev.mvc.technology.TechVO" parameterType="int">
+        SELECT techno, adminno, api_no, tech_name, contents, cnt, reply, rdate, word, thumb1, size1, file1, passwd, file1saved
+        FROM technology
+        WHERE techno = #{techno}
+    </select>
+
+    <!-- 패스워드 검사  -->
+    <select id="passwd_check" resultType='int' parameterType='HashMap'>
+    SELECT COUNT(*) as cnt
+    FROM technology
+    WHERE techno = #{techno } AND passwd = #{passwd }
+    </select>
+
+    <!-- 파일수정 -->
+    <update id="update_text" parameterType="dev.mvc.technology.TechVO">
+    UPDATE technology
+    SET tech_name=#{tech_name}, contents=#{contents},  word=#{word}, passwd=#{passwd }
+    WHERE techno = #{techno}
+    </update>
+
+    <!-- 파일수정 -->
+    <update id="update_file" parameterType="dev.mvc.technology.TechVO">
+    UPDATE technology
+    SET file1=#{file1}, file1saved=#{file1saved}, thumb1=#{thumb1}, size1=#{size1}
+    WHERE techno = #{techno}
+    </update>    
+
+    <delete id="delete" parameterType="int">
+    DELETE FROM technology
+    WHERE techno = #{techno }
+    </delete>
+
+      <select id="search_count" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM technology
+    <choose>
+      <when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
+        WHERE api_no=#{api_no}
+      </when>
+      <otherwise> <!-- 검색하는 경우의 레코드 갯수 -->
+        WHERE api_no=#{api_no} AND (tech_name LIKE '%' || #{word} || '%' 
+                                                       OR contents LIKE '%' || #{word} || '%' 
+                                                       OR word LIKE '%' || #{word} || '%')
+      </otherwise>
+    </choose>
+  </select>    
+
+
+  <select id="list_technology" resultType="dev.mvc.technology.TechVO" parameterType="HashMap">
+      SELECT techno, tech_name, contents, file1, file1saved, thumb1, size1, r, passwd, word
+      FROM (
+              SELECT techno, tech_name, contents, file1, file1saved, thumb1, size1, rownum as r, passwd, word
+              FROM (
+                        SELECT techno, tech_name, contents, file1, file1saved, thumb1, size1, passwd, word
+                        FROM technology
+                                <choose>
+                                    <when test="word == null or word == ''">
+                                        WHERE api_no= #{api_no}
+                                    </when>
+                                    <otherwise>
+                                        WHERE api_no = #{api_no} AND (tech_name LIKE '%'|| #{word}||'%'
+                                                                            OR contents LIKE '%'||#{word}||'%'
+                                                                            OR word LIKE '%'||#{word}||'%')
+                                    </otherwise>
+
+                                </choose>
+                                ORDER BY techno DESC
+                      )
+            )
+            WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+
+  </select>
+  
+  <!-- 추천 -->
+    <update id="update_recom" parameterType="int" >
+        UPDATE technology
+        SET recom = recom + 1
+        WHERE techno = #{ techno}
+    </update>
+    
+</mapper>

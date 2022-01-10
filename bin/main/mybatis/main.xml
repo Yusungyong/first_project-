@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.project.MainDAOInter">
+  <insert id="create" parameterType="dev.mvc.project.MainVO">
+    INSERT INTO maincate(main_no, main_name, main_seqno, rdate)
+    VALUES(maincate_seq.nextval, #{main_name }, #{main_seqno}, sysdate)
+  </insert>
+
+      <!-- 
+  레코드 갯수 만큼 CategrpVO 객체를 만들어 ArrayList에 저장하여 리턴,
+  List<CategrpVO> list = new ArrayList<CategrpVO>(); 
+  -->
+   <select id="list" resultType="dev.mvc.project.MainVO">
+    SELECT  main_no, main_name, rdate, main_seqno
+    FROM maincate
+    ORDER BY main_no ASC
+  </select>
+  
+    <!-- 조회, id: read, 입력: categrpno, 리턴: CategrpVO -->
+  <select id="read" resultType="dev.mvc.project.MainVO" parameterType="int">
+    SELECT  main_no, main_name, main_seqno, rdate
+    FROM maincate
+    WHERE main_no=#{main_no}
+  </select>
+  
+  <!--  수정, id:update, 입력 : MainVO, 리턴 : int-->
+  <update id="update" parameterType="dev.mvc.project.MainVO" >
+  UPDATE maincate
+  SET main_name=#{main_name}, main_seqno= #{main_seqno}
+  WHERE main_no = #{main_no}
+  </update>
+  
+  <!-- 삭제 id = delete 입력: int  -->
+  <delete id="delete" parameterType="int" >
+  DELETE maincate
+  WHERE main_no = #{main_no}
+  </delete>
+  
+  <update id="update_seqno_up" parameterType="int">
+  UPDATE maincate
+  SET main_seqno = main_seqno - 1
+  WHERE main_no = #{main_no }
+  </update>
+  
+  <update id="update_seqno_down" parameterType="int">
+  UPDATE maincate
+  SET main_seqno = main_seqno + 1
+  WHERE main_no = #{main_no }
+  </update>
+  
+  <select id="list_by_asc" resultType="dev.mvc.project.MainVO">
+  SELECT main_no, main_name, main_seqno, rdate
+  FROM maincate
+  ORDER BY main_seqno ASC
+  </select>
+  
+  
+</mapper>  

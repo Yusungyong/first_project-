@@ -1,0 +1,48 @@
+
+<!DOCTYPE html> 
+<html lang="ko"> 
+<head> 
+<meta charset="UTF-8"> 
+<meta name="viewport" content="user-scalable=yes, initial-scale=1.0, maximum-scale=3.0, width=device-width" /> 
+<title>My Library</title>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- Bootstrap -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    
+<script type="text/javascript">
+  $(function(){
+ 
+  });
+</script>
+
+</head> 
+<body>
+  <nav calss="navbar">
+    <div class="navbar_logo">
+        <a href="/center.do">My Library</a>
+    </div>
+    
+    <ul class="navbar_menu">
+        <li><a href="/api/list_api.do?main_no=1">PYTHON</a></li>
+        <li><a href="/api/list_api.do?main_no=2">JAVA</a></li>
+        <li><a href="/api/list_api.do?main_no=3">HTML</a></li>
+        <li><a href="/api/list_api.do?main_no=4">SQL</a></li>
+        <li><a href="/api/list_api.do?main_no=10">Programing Basic </a></li>
+        <li class="create">등록
+             <ul class="create_list">
+                <li><a href="/cate_main/create.do">카테고리 등록</a></li>
+                <li><a href="/cate_main/create.do">api 등록</li>
+                <li><a href="/cate_main/create.do">기술 등록</li>
+            </ul>
+            </li>
+       </ul>
+
+</nav>
+
+
+</body>
+
+</html>
